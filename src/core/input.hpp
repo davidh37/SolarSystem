@@ -59,5 +59,8 @@ namespace input {
 	bool hasQuit();
     bool hasResized();
 	void getMousePosition(int &x, int &y);
+    void getMouseDelta(int &x, int &y);
+    void lockMouse();
+    void unlockMouse();
 	Keystate getKeyState(Keycode key);
 }

@@ -11,7 +11,7 @@ namespace engine {
     
     
 
-    void initialize(string window_name, int res_x, int res_y, bool resizable, int gl_major, int gl_minor){
+    void initialize(string window_name, int res_x, int res_y, bool resizable, bool vsync, int gl_major, int gl_minor){
         
         if(SDL_Init(SDL_INIT_VIDEO) < 0){
             cout << "SDL could not initialize\n";
@@ -38,7 +38,7 @@ namespace engine {
             SDL_Quit();
             abort();
         }
-        SDL_GL_SetSwapInterval(0); //vsync off
+        SDL_GL_SetSwapInterval(vsync ? 1 : 0); //vsync off
 
         if(!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)){
             cout << "GLAD could not initalize\n";
@@ -59,6 +59,9 @@ namespace engine {
         return SDL_GetTicks();
     }
 
+    void sleep(uint32_t ms){
+        SDL_Delay(ms);
+    }
 	
 
     void getWindowSize(int &w, int &h){

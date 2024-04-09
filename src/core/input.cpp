@@ -103,6 +103,19 @@ namespace input {
     void getMousePosition(int &x, int &y){
         SDL_GetMouseState(&x, &y);
     }
+
+    void getMouseDelta(int &x, int &y){
+        uint32_t mask = SDL_GetRelativeMouseState(&x, &y);
+    }
+
+    void lockMouse(){
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+    }
+
+    void unlockMouse(){
+        SDL_SetRelativeMouseMode(SDL_FALSE);
+    }
+
     Keystate getKeyState(Keycode key){
         return (Keystate)keystates[key];
     }
