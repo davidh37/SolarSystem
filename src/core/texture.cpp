@@ -60,7 +60,8 @@ uint8_t* Texture::get_pixels(int &pitch){
     return (uint8_t*)surf->pixels;
 }
 
-void Texture::load(){
+void Texture::load(int texture_unit){
+    glActiveTexture(GL_TEXTURE0 + texture_unit);
     glBindTexture(GL_TEXTURE_2D, id);
 }
 

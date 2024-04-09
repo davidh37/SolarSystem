@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "common.hpp"
 #include "mesh.hpp"
 #include "shader.hpp"
@@ -17,7 +18,7 @@ void Mesh::upload(VertexBuffer &vertices, IndexBuffer &indices, Hint hint, bool 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, extra));
         glEnableVertexAttribArray(1);
 
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
@@ -26,6 +27,7 @@ void Mesh::upload(VertexBuffer &vertices, IndexBuffer &indices, Hint hint, bool 
         if(instanced){
             glGenBuffers(1, &ivbo);
             glBindBuffer(GL_ARRAY_BUFFER, ivbo);
+            //2Dpos, scale, color (for particles) #todo change to 3D pos
             glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
             glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) (2 * sizeof(float)));
             glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) (3 * sizeof(float)));

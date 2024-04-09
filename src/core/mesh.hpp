@@ -7,7 +7,7 @@
 struct Mesh {
     struct Vertex {
         vec3 position = vec3(0.0f);
-        vec3 color = COLOR_BLACK;
+        vec3 extra = COLOR_BLACK;
         vec2 uv = vec2(0.0f);
     };
     typedef std::vector<Vertex> VertexBuffer;

@@ -5,31 +5,35 @@
 #include "core/shader.hpp"
 #include "core/texture.hpp"
 #include "core/input.hpp"
+#include "meshloader.hpp"
 
 static uint32_t timestamp;
 
 int main(int argc, char *argv[]){
     engine::initialize("Solar System Demo", 1024, 768, false, false, 3, 3);
 
-
-    Texture t;
-    Mesh m;
     Shader s;
     s.compile("resources/color.vert", "resources/color.frag");
     s.load();
-    t.create("resources/test.png", false);
+
+    Texture t;
+    t.create("resources/test.png", true);
+    t.upload(false);
     t.load();
-    Mesh::Vertex v1 = {{0.0f, 0.5f, 0.0f}, COLOR_RED, {0.0f, 0.0f}};
-    Mesh::Vertex v2 = {{0.5f, 0.0f, 0.0f}, COLOR_RED, {1.0f, 0.0f}};
-    Mesh::Vertex v3 = {{-0.5f, 0.0f, 0.0f}, COLOR_RED, {0.0f, 1.0f}};
-    Mesh::VertexBuffer vb = {v1, v2, v3};
-    Mesh::IndexBuffer ib = {0, 1, 2};
+    s.setUniformInteger(1, 0);
+    
+
+    Mesh m;
+    Mesh::VertexBuffer vb;
+    Mesh::IndexBuffer ib;
+    //meshloader::addCircle(vb, ib, 16, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, COLOR_RED, {0.5f, 0.5f}, {1.0f, 1.0f});
+    if(!meshloader::addObj(vb, ib, "resources/bunny.obj")){
+        return 1;
+    }
     m.upload(vb, ib, Mesh::STATIC, false);
+
     camera::setProjection(90.0f, 0.01f, 100.0f);
-    camera::setPosition({0.0f, 0.0f, -5.0f});
-
-
-
+    camera::setPosition({0.0f, 0.0f, -2.0f});
     
     input::lockMouse();
     timestamp = engine::getMs();
@@ -43,9 +47,9 @@ int main(int argc, char *argv[]){
 
         int mouse_delta_x, mouse_delta_y;
         input::getMouseDelta(mouse_delta_x, mouse_delta_y);
-        cout << delta << endl;
-        cout << mouse_delta_x << " | " << mouse_delta_y << endl;
-        cout << "fps: " << 1.0f / delta << endl;
+        //cout << delta << endl;
+        //cout << mouse_delta_x << " | " << mouse_delta_y << endl;
+        //cout << "fps: " << 1.0f / delta << endl;
         float mouseDeltaX = delta * 0.5f * mouse_delta_x;
         float mouseDeltaY = -delta * 0.5f * mouse_delta_y;
 

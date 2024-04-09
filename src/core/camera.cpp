@@ -8,6 +8,7 @@
 namespace camera {
     static mat4 view_matrix = glm::mat4(1.0f);
     static mat4 projection_matrix = glm::mat4(1.0f);
+    static bool initialized = false;
 
     static vec3 position = vec3(0.0f);
     static vec3 up = vec3(0.0f, 1.0f, 0.0f);
@@ -58,12 +59,14 @@ namespace camera {
         projection_matrix[2][2] = -projection_matrix[2][2];
         projection_matrix[2][3] = -projection_matrix[2][3];
         updateView();
+
+        initialized = true;
     }
 
     void setOrthographic(float left, float right, float bottom, float top){
         perspective = false;
-        //untested
         projection_matrix = glm::ortho(left, right, bottom, top);
+        initialized = true;
     }
 
     mat4 getViewMatrix(){
@@ -71,6 +74,7 @@ namespace camera {
     }
 
     mat4 getProjectionMatrix(){
+        assert(initialized);
         return projection_matrix;
     }
 
