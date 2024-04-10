@@ -11,6 +11,8 @@ stb_image (public domain image loader)
 https://github.com/nothings/stb  
 Various 3D models from  
 http://graphics.stanford.edu/data/3Dscanrep/  
+Planet textures from  
+https://www.solarsystemscope.com/textures/  
 
 ## Building
 ### On Windows
