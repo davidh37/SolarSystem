@@ -20,7 +20,6 @@ Open MSYS2 Clang64 (!) Terminal and enter:
 `pacman -S mingw-w64-clang-x86_64-toolchain`  
 `pacman -S mingw-w64-clang-x86_64-cmake`  
 `pacman -S mingw-w64-clang-x86_64-SDL2 mingw-w64-clang-x86_64-glm`  
-navigate to repository  
 
 ### On Linux
 Install SDL2, glm  
