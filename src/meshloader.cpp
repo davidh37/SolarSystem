@@ -277,7 +277,7 @@ namespace meshloader {
         vb.push_back(first);
     }
 
-    void addSquare(meshing::VertexBuffer &vb, vec3 pos, vec2 scale, vec3 color, vec2 uv_pos, vec2 uv_scale){
+    void addRect(meshing::VertexBuffer &vb, vec3 pos, vec2 scale, vec3 color, vec2 uv_pos, vec2 uv_scale){
         float x1 = pos.x;
         float x2 = pos.x + scale.x;
         float y1 = pos.y;

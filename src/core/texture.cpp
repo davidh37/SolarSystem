@@ -10,6 +10,10 @@ SDL_Surface* Texture::loadPixels(string const &path, bool flip){
     stbi_set_flip_vertically_on_load(flip);
     int width, height, bytesPerPixel;
     void* data = stbi_load(path.c_str(), &width, &height, &bytesPerPixel, 0);
+    if(!data){
+        engine::showErrorMessage("[texture] failed to read file " + path);
+        engine::quit(1);
+    }
 
     assert(SDL_BYTEORDER == SDL_LIL_ENDIAN);
     assert(bytesPerPixel == 3 || bytesPerPixel == 4);
@@ -25,7 +29,7 @@ SDL_Surface* Texture::loadPixels(string const &path, bool flip){
     SDL_Surface* helper = SDL_CreateRGBSurfaceFrom(data, width, height, bytesPerPixel*8, pitch, Rmask, Gmask, Bmask, Amask);
     if(!helper){
         stbi_image_free(data); //equivalent to free, don't forget to free this in the other
-        engine::showErrorMessage("[texture] failed to read file " + path);
+        engine::showErrorMessage("[texture] failed to make helper surface " + path);
         engine::quit(1);
     }
 

@@ -6,11 +6,14 @@
 #include "core/texture.hpp"
 #include "core/input.hpp"
 #include "meshloader.hpp"
+#include "ui_layer.hpp"
 
 static uint32_t timestamp;
 
 int main(int argc, char *argv[]){
     engine::initialize("Solar System Demo", 1024, 768, false, false, 3, 3);
+
+
 
     Shader s;
     s.create("resources/texture.vert", "resources/texture.frag");
@@ -23,10 +26,12 @@ int main(int argc, char *argv[]){
     t.use();
     s.setUniformInteger(1, 0);
 
+    ui_layer::initialize();
+
     meshing::Mesh m;
     meshing::VertexBuffer vb;
 
-    meshloader::addSquare(vb, {-1.0f, 0.0f, 0.0f}, {0.5f, 0.5f}, COLOR_BLACK, {0.0f, 0.0f}, {1.0f, 1.0f});
+    meshloader::addRect(vb, {-1.0f, 0.0f, 0.0f}, {0.5f, 0.5f}, COLOR_BLACK, {0.0f, 0.0f}, {1.0f, 1.0f});
     //meshloader::addObj(vb, "resources/bunny.obj");
     m.create(vb, meshing::STATIC, meshing::TRIANGLE);
 
@@ -77,8 +82,16 @@ int main(int argc, char *argv[]){
         engine::clearScreen(0.2f, 0.2, 0.5f);
         
         mat4 vp = camera::getProjectionMatrix() * camera::getViewMatrix();
+
+        s.use();
+        t.use();
+
         s.setUniformMat4(0, vp);
         m.draw();
+
+        ui_layer::drawStringUnscaled("hello world", 0.1f, 0.1f, 0.2f, COLOR_RED);
+        ui_layer::render();
+
         if(engine::queryErrors()){
             engine::quit(1);
         }
@@ -86,7 +99,7 @@ int main(int argc, char *argv[]){
         engine::sleep(1);
 
     }
-    
+    ui_layer::cleanup();
     engine::quit();
     return 0;
 }
