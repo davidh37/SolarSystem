@@ -75,11 +75,6 @@ namespace meshing {
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, extra2));
         glEnableVertexAttribArray(2);
     }
-
-    void Mesh::create(VertexBuffer& vb, Hint h, Primitive p){
-        Mesh::create(h, p);
-        Mesh::update(vb);
-    }
     
     void Mesh::update(VertexBuffer& vb){
         v_count = vb.size();

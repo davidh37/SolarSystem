@@ -48,7 +48,6 @@ namespace meshing {
     class Mesh {
         public:
             void create(Hint h = STATIC, Primitive p = TRIANGLE);
-            void create(VertexBuffer &vb, Hint h = STATIC, Primitive p = TRIANGLE);
             void update(VertexBuffer &vb);
             void updateInstances(VertexBuffer &instance_buffer, Hint h = DYNAMIC);
             void draw();

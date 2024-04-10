@@ -68,7 +68,7 @@ namespace ui_layer{
     void initialize(){
         mesh.create(meshing::STREAM, meshing::TRIANGLE);
 
-        shader.create("resources/texture.vert", "resources/texture_color_mix.frag");
+        shader.createAndUpdate("resources/texture.vert", "resources/texture_color_mix.frag");
 
         fontTexture.create(false, 1);
         SDL_Surface *surf = Texture::loadPixels("resources/calibri32clean.bmp", false);

@@ -5,7 +5,7 @@
 
 class Shader {
     public:
-        void create(string const& vert_location, string const& frag_location);
+        void createAndUpdate(string const& vert_location, string const& frag_location);
         void use();
         void setUniformInteger(int location, int val);
         void setUniformMat4(int location, mat4 val);

@@ -19,7 +19,7 @@ static bool readShaderFile(string& buffer, string const& location){
     return true;
 }
 
-void Shader::create(string const& vert_location, string const& frag_location){
+void Shader::createAndUpdate(string const& vert_location, string const& frag_location){
     string vert_shader;
     string frag_shader;
     if(!readShaderFile(vert_shader, vert_location)){

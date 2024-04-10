@@ -7,6 +7,6 @@ out vec4 out_Color;
 layout(location = 1) uniform sampler2DArray tex;
 
 void main(){
-    vec4 tex_color = texture(tex, vec3(Texcoord, 0));
+    vec4 tex_color = texture(tex, vec3(Texcoord, 1));
     out_Color = tex_color;
 }
