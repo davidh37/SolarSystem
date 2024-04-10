@@ -5,18 +5,21 @@
 #include "common.hpp"
 
 
-struct Texture {
-    SDL_Surface *surf;
-    GLuint id = 0;
 
-    // create() doesn't upload!
-    void create(string const &path, bool flip);
-    uint8_t* get_pixels(int &pitch);
-    void convert_black_to_alpha();
 
-    // required!
-    void upload(bool interpolate);
+class Texture {
+    public:
+        static SDL_Surface* loadPixels(string const &path, bool flip);
+        static void convertBlackToAlpha(SDL_Surface &pixels);
 
-    void load(int texture_unit = 0);
-    void destroy();
+        void create(bool interpolate);
+        void create(string const &path, bool flip, bool interpolate);
+        void update(SDL_Surface &surf);
+
+        void use(int texture_unit = 0);
+        void destroy();
+
+    private:
+        GLuint id = 0;
+        bool uploaded = false;
 };

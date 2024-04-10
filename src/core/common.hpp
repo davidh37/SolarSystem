@@ -19,6 +19,7 @@
 #define COLOR_GREEN vec3(0.0f, 1.0f, 0.0f)
 #define COLOR_WHITE vec3(1.0f, 1.0f, 1.0f)
 #define COLOR_BLACK vec3(0.0f, 0.0f, 0.0f)
+#define COLOR_YELLOW vec3(1.0f, 1.0f, 0.0f)
 #define COLOR_LIGHTGRAY vec3(0.85f, 0.85f, 0.85f)
 #define COLOR_GRAY vec3(0.5f, 0.5f, 0.5f)
 #define COLOR_DARKGRAY vec3(0.2f, 0.2f, 0.2f)

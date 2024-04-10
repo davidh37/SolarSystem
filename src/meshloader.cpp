@@ -30,9 +30,7 @@ namespace meshloader {
         return true;
     }
 
-    bool addObj(Mesh::VertexBuffer &vb, Mesh::IndexBuffer &ib, string path, vec3 pos, vec3 fallback_color){
-        uint16_t last = ib.size();
-
+    bool addObj(meshing::VertexBuffer &vb, string path, vec3 pos, vec3 fallback_color){
         std::ifstream myfile(path);
         if(!myfile.is_open()) {
             cout << "addObj PARSE ERROR: couldn't open .obj file " << path << endl;
@@ -193,7 +191,7 @@ namespace meshloader {
 
                 // finally add vertex   
                 for(int k = 0; k < 3; k++){
-                    Mesh::Vertex v;
+                    meshing::Vertex v;
                     
                     // adjust for off by one
                     position_index[k] -= 1;
@@ -207,6 +205,7 @@ namespace meshloader {
                         goto parse_error;
                     }
                     v.position = {position_list[position_index[k] * 3 + 0], position_list[position_index[k] * 3 + 1], position_list[position_index[k] * 3 + 2]};
+                    v.position += pos;
 
                     // set normal
                     if(normal_index[k] == -1){
@@ -221,24 +220,18 @@ namespace meshloader {
 
                     // set uv
                     if(uv_index[k] == -1){
-                        v.uv = vec2(0.0f, 0.0f);
+                        v.extra2 = vec2(0.0f, 0.0f);
                     }else{
                         if(uv_index[k] < 0 || uv_index[k] >= (int) uv_list.size() / 2){
                             cout << "uv index out of range at " << k << endl;
                             goto parse_error;
                         }
-                        v.uv = {uv_list[uv_index[k] * 2 + 0], uv_list[uv_index[k] * 2 + 1]};
+                        v.extra2 = {uv_list[uv_index[k] * 2 + 0], uv_list[uv_index[k] * 2 + 1]};
                     }
                     
                     vb.push_back(v);
-                    if(last + total_count == 65535){
-                        cout << "index max size reached. is the model too big?" << endl;
-                    }
-                    ib.push_back(last + total_count);
+                    
                     total_count++;
-                    if(total_count == 9){
-                        //return true;
-                    }
                 }
                 
             }else{
@@ -256,17 +249,15 @@ namespace meshloader {
             return false;
     }
 
-    void addCircle(Mesh::VertexBuffer &vb, Mesh::IndexBuffer &ib, int segments, vec3 pos, vec2 scale, vec3 color, vec2 uv_pos, vec2 uv_scale){
-        uint16_t last = vb.size();
+    void addCircle(meshing::VertexBuffer &vb, int segments, vec3 pos, vec2 scale, vec3 color, vec2 uv_pos, vec2 uv_scale){
+        vb.reserve(vb.size() + segments * 3);
 
-        vb.reserve(vb.size() + segments + 1);
-        ib.reserve(ib.size() + segments * 3);
-
-        Mesh::Vertex origin = {pos, color, vec2(0.5f, 0.5f)};
-        vb.push_back(origin);
+        meshing::Vertex origin = {pos, color, vec2(0.5f, 0.5f)};
         
         float increment = 2.0f * M_PI / segments;
         float angle = 0.0f;
+
+        meshing::Vertex first;
 
         for(int i = 0; i < segments; i++){
             angle += increment;
@@ -274,24 +265,25 @@ namespace meshloader {
             float sine = sin(angle);
             vec3 vpos = vec3(pos.x + scale.x * cosine, pos.y + scale.y * sine, pos.z);
             vec2 uv = vec2(uv_pos.x + 0.5f * uv_scale.x * cosine, uv_pos.y + 0.5f * uv_scale.y * sine);
-            Mesh::Vertex v = {vpos, color, uv};
+            meshing::Vertex v = {vpos, color, uv};
+            if(i > 0){
+                vb.push_back(v);
+            }else{
+                first = v;
+            }
+            vb.push_back(origin);
             vb.push_back(v);
-            ib.push_back(last + 0);
-            ib.push_back(last + i+1);
-            ib.push_back(last + i+2);
         }
-        ib[ib.size()-1] = last + 1;
+        vb.push_back(first);
     }
 
-    void addSquare(Mesh::VertexBuffer &vb, Mesh::IndexBuffer &ib, vec3 pos, vec2 scale, vec3 color, vec2 uv_pos, vec2 uv_scale){
-        uint16_t last = vb.size();
-
+    void addSquare(meshing::VertexBuffer &vb, vec3 pos, vec2 scale, vec3 color, vec2 uv_pos, vec2 uv_scale){
         float x1 = pos.x;
         float x2 = pos.x + scale.x;
         float y1 = pos.y;
         float y2 = pos.y + scale.y;
 
-        Mesh::Vertex v[4];
+        meshing::Vertex v[4];
         v[0] = {vec3(x1, y2, pos.z), color, vec2(uv_pos.x, uv_pos.y)};
         v[1] = {vec3(x1, y1, pos.z), color, vec2(uv_pos.x, uv_pos.y+ uv_scale.y)};
         v[2] = {vec3(x2, y1, pos.z), color, vec2(uv_pos.x + uv_scale.x, uv_pos.y+ uv_scale.y)};
@@ -300,14 +292,8 @@ namespace meshloader {
         vb.push_back(v[0]);
         vb.push_back(v[1]);
         vb.push_back(v[2]);
+        vb.push_back(v[0]);
+        vb.push_back(v[2]);
         vb.push_back(v[3]);
-
-        ib.push_back(last + 0);
-        ib.push_back(last + 1);
-        ib.push_back(last + 2);
-        ib.push_back(last + 0);
-        ib.push_back(last + 2);
-        ib.push_back(last + 3);
     }
-
 }
