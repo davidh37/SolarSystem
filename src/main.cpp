@@ -13,24 +13,20 @@ int main(int argc, char *argv[]){
     engine::initialize("Solar System Demo", 1024, 768, false, false, 3, 3);
 
     Shader s;
-    s.compile("resources/color.vert", "resources/color.frag");
-    s.load();
+    s.create("resources/texture.vert", "resources/texture.frag");
+    s.use();
 
     Texture t;
-    t.create("resources/test.png", true);
-    t.upload(false);
-    t.load();
+    t.create("resources/test.png", false, false);
+    t.use();
     s.setUniformInteger(1, 0);
 
+    meshing::Mesh m;
+    meshing::VertexBuffer vb;
 
-    Mesh m;
-    Mesh::VertexBuffer vb;
-    Mesh::IndexBuffer ib;
-    //meshloader::addCircle(vb, ib, 16, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, COLOR_RED, {0.5f, 0.5f}, {1.0f, 1.0f});
-    if(!meshloader::addObj(vb, ib, "resources/bunny.obj")){
-        engine::quit(1);
-    }
-    m.upload(vb, ib, Mesh::STATIC, false);
+    meshloader::addSquare(vb, {-1.0f, 0.0f, 0.0f}, {0.5f, 0.5f}, COLOR_BLACK, {0.0f, 0.0f}, {1.0f, 1.0f});
+    //meshloader::addObj(vb, "resources/bunny.obj");
+    m.create(vb, meshing::STATIC, meshing::TRIANGLE);
 
     camera::setProjection(90.0f, 0.01f, 100.0f);
     camera::setPosition({0.0f, 0.0f, -2.0f});
@@ -81,6 +77,9 @@ int main(int argc, char *argv[]){
         mat4 vp = camera::getProjectionMatrix() * camera::getViewMatrix();
         s.setUniformMat4(0, vp);
         m.draw();
+        if(engine::queryErrors()){
+            engine::quit(1);
+        }
         engine::swapBuffer();
         engine::sleep(1);
 

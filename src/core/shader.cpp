@@ -19,7 +19,7 @@ static bool readShaderFile(string& buffer, string const& location){
     return true;
 }
 
-void Shader::compile(string const& vert_location, string const& frag_location){
+void Shader::create(string const& vert_location, string const& frag_location){
     string vert_shader;
     string frag_shader;
     if(!readShaderFile(vert_shader, vert_location)){
@@ -79,7 +79,7 @@ void Shader::compile(string const& vert_location, string const& frag_location){
     glUseProgram(id);
 }
 
-void Shader::load(){
+void Shader::use(){
     glUseProgram(id);
 }
 
