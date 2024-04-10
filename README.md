@@ -20,12 +20,14 @@ Open MSYS2 Clang64 (!) Terminal and enter:
 `pacman -S mingw-w64-clang-x86_64-toolchain`  
 `pacman -S mingw-w64-clang-x86_64-cmake`  
 `pacman -S mingw-w64-clang-x86_64-SDL2 mingw-w64-clang-x86_64-glm`  
+Navigate to repository  
 
 ### On Linux
 Install SDL2, glm  
+Navigate to repository  
 
 ### On Linux & Windows
-Navigate to repository  
+Enter:  
 `cmake --preset debug` or `cmake --preset release`  
 `cd build/debug` or `cd build/release`  
 `ninja`  
