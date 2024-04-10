@@ -17,7 +17,9 @@ int main(int argc, char *argv[]){
     s.use();
 
     Texture t;
-    t.create("resources/test.png", false, false);
+    t.create(false, 2);
+    t.update("resources/test.png", false, 0);
+    t.update("resources/test2.png", false, 1);
     t.use();
     s.setUniformInteger(1, 0);
 

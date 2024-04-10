@@ -58,44 +58,52 @@ void Texture::convertBlackToAlpha(SDL_Surface &surf){
     }
 }
 
-void Texture::create(bool interpolate){
+void Texture::create(bool interpolate, int layers){
     glGenTextures(1, &id);
-    glBindTexture(GL_TEXTURE_2D, id);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, id);
     if(interpolate){
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }else{
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    this->layers = layers;
 }
 
-void Texture::create(string const &path, bool flip, bool interpolate){
-    Texture::create(interpolate);
+void Texture::update(string const &path, bool flip, int layer){
     SDL_Surface *surf = loadPixels(path, flip);
-    Texture::update(*surf);
+    Texture::update(*surf, layer);
     SDL_FreeSurface(surf);
 }
 
-void Texture::update(SDL_Surface &surf){
+void Texture::update(SDL_Surface &surf, int layer){
     assert(id != 0);
-    glBindTexture(GL_TEXTURE_2D, id);
-    if(uploaded){
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf.w, surf.h, GL_RGBA, GL_UNSIGNED_BYTE, surf.pixels);
-    }else{
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surf.w, surf.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surf.pixels);
-        uploaded = true;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, id);    
+    if(w == 0){
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, surf.w, surf.h, layers, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL); // refer to glTexStorage3D() 
+        w = surf.w;
+        h = surf.h;
     }
+    if(w != surf.w || h != surf.h){
+        engine::showErrorMessage("[texture] texture size is incompatible with texture array");
+        engine::quit(1);
+    }
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, surf.w, surf.h, 1, GL_RGBA, GL_UNSIGNED_BYTE, surf.pixels);
 }
 
 void Texture::use(int texture_unit){
     glActiveTexture(GL_TEXTURE0 + texture_unit);
-    glBindTexture(GL_TEXTURE_2D, id);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, id);
 }
 
 void Texture::destroy(){
     glDeleteTextures(1, &id);
     id = 0;
-    uploaded = false;
+    layers = 0;
+    w = 0;
+    h = 0;
 }
 
