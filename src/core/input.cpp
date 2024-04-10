@@ -1,4 +1,5 @@
 #include "input.hpp"
+#include "engine.hpp"
 #include "common.hpp"
 #include <SDL2/SDL.h>
 
@@ -105,15 +106,22 @@ namespace input {
     }
 
     void getMouseDelta(int &x, int &y){
-        uint32_t mask = SDL_GetRelativeMouseState(&x, &y);
+        SDL_GetRelativeMouseState(&x, &y);
     }
 
     void lockMouse(){
-        SDL_SetRelativeMouseMode(SDL_TRUE);
+        if(SDL_SetRelativeMouseMode(SDL_TRUE) < 0){
+            engine::showErrorMessage("[input] failed to trap mouse");
+            engine::quit(1);
+        }
+        
     }
 
     void unlockMouse(){
-        SDL_SetRelativeMouseMode(SDL_FALSE);
+        if(SDL_SetRelativeMouseMode(SDL_FALSE) < 0){
+            engine::showErrorMessage("[input] failed to untrap mouse");
+            engine::quit(1);
+        }
     }
 
     Keystate getKeyState(Keycode key){

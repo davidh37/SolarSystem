@@ -2,6 +2,7 @@
 #include <fstream>
 #include "common.hpp"
 #include "shader.hpp"
+#include "engine.hpp"
 
 static bool readShaderFile(string& buffer, string const& location){
     std::ifstream myfile(location, std::ios::in);
@@ -22,12 +23,12 @@ void Shader::compile(string const& vert_location, string const& frag_location){
     string vert_shader;
     string frag_shader;
     if(!readShaderFile(vert_shader, vert_location)){
-        cout << "Failed to read shader file " + vert_location + "\n";
-        abort();
+        engine::showErrorMessage("[shader] failed to read file " + vert_location);
+        engine::quit(1);
     }
     if(!readShaderFile(frag_shader, frag_location)){
-        cout << "Failed to read shader file " + frag_location + "\n";
-        abort();
+        engine::showErrorMessage("[shader] failed to read file " + frag_location);
+        engine::quit(1);
     }
     const char* vert_shader_cstr = vert_shader.c_str();
     const char* frag_shader_cstr = frag_shader.c_str();
@@ -43,8 +44,8 @@ void Shader::compile(string const& vert_location, string const& frag_location){
     if (status != GL_TRUE) {
         glGetShaderInfoLog(vert_id, sizeof(err_buf), NULL, err_buf);
         err_buf[sizeof(err_buf)-1] = '\0';
-        cout << "Vertex shader compilation failed: " + string(err_buf) + "\n";
-        abort();
+        engine::showErrorMessage("[shader] " + vert_location + " compilation failed: " + string(err_buf));
+        engine::quit(1);
     }
 
     // Compile fragment shader
@@ -55,8 +56,8 @@ void Shader::compile(string const& vert_location, string const& frag_location){
     if (status != GL_TRUE) {
         glGetShaderInfoLog(frag_id, sizeof(err_buf), NULL, err_buf);
         err_buf[sizeof(err_buf)-1] = '\0';
-        cout << "Fragment shader compilation failed: " + string(err_buf) + "\n";
-        abort();
+        engine::showErrorMessage("[shader] " + frag_location + " compilation failed: " + string(err_buf));
+        engine::quit(1);
     }
 
     // Link vertex and fragment shaders
@@ -71,8 +72,8 @@ void Shader::compile(string const& vert_location, string const& frag_location){
     if(isLinked == GL_FALSE){
         glGetProgramInfoLog(id, sizeof(err_buf), NULL, err_buf);
         err_buf[sizeof(err_buf)-1] = '\0';
-        cout << "Shader program linking failed: " + string(err_buf) + "\n";
-        abort();
+        engine::showErrorMessage("[shader] " + vert_location + " & " + frag_location + " linking failed: " + string(err_buf));
+        engine::quit(1);
     }
 
     glUseProgram(id);

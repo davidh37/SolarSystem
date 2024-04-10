@@ -51,6 +51,8 @@ namespace camera {
         current_near = near;
         current_far = far;
 
+        assert(fov > 0);
+
         float aspectXtoY = (float)screenWidth / (float)screenHeight;
         float fov_y = 2.0f * atan(aspectXtoY * (tan(fov * M_PI / 180.0f * 0.5f)));
         projection_matrix = glm::perspective(fov_y, aspectXtoY, near, far);
@@ -79,6 +81,8 @@ namespace camera {
     }
 
     void setScreenSize(int w, int h){
+        assert(w > 0);
+        assert(h > 0);
         screenWidth = w;
         screenHeight = h;
         engine::setViewport(0, 0, w, h);

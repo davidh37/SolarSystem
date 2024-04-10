@@ -108,8 +108,8 @@ void Mesh::uploadInstanceData(std::vector<float> &instance_data, Hint hint){
 #include "engine.hpp"
 
 void Mesh::draw(){
-    
     assert(vao != 0);
+    
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);

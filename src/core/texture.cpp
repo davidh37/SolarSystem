@@ -1,5 +1,6 @@
 #include "common.hpp"
 #include "texture.hpp"
+#include "engine.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -22,10 +23,10 @@ void Texture::create(string const &path, bool flip){
     
     //create inefficiently non padded RGB surface
     SDL_Surface* helper = SDL_CreateRGBSurfaceFrom(data, width, height, bytesPerPixel*8, pitch, Rmask, Gmask, Bmask, Amask);
-    if (!helper){
+    if(!helper){
         stbi_image_free(data); //equivalent to free, don't forget to free this in the other
-        cout << "couldn't load image" << endl;
-        abort();
+        engine::showErrorMessage("[texture] failed to read file " + path);
+        engine::quit(1);
     }
 
     //create standalone surface to return
@@ -34,8 +35,8 @@ void Texture::create(string const &path, bool flip){
     stbi_image_free(data);
 
     if(surf == nullptr){
-        cout << "couldn't convert image" << endl;
-        abort();
+        engine::showErrorMessage("[texture] failed to convert file " + path);
+        engine::quit(1);
     }
 
     SDL_LockSurface(surf);

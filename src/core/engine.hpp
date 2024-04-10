@@ -13,6 +13,8 @@ namespace engine {
 	void setViewport(int x, int y, int w, int h);
 	void swapBuffer();
 	void clearScreen(float r, float g, float b);
-	void quit();
+	void showErrorMessage(string message);
+	bool queryErrors(int max_print = 8); // redundant error checking
+	void quit(int code = 0);
 }
 

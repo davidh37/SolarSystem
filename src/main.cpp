@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
     Mesh::IndexBuffer ib;
     //meshloader::addCircle(vb, ib, 16, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, COLOR_RED, {0.5f, 0.5f}, {1.0f, 1.0f});
     if(!meshloader::addObj(vb, ib, "resources/bunny.obj")){
-        return 1;
+        engine::quit(1);
     }
     m.upload(vb, ib, Mesh::STATIC, false);
 
