@@ -23,13 +23,13 @@ Open MSYS2 Clang64 (!) Terminal and enter:
 navigate to repository  
 
 ### On Linux
-Install SDL2, glm
+Install SDL2, glm  
 
 ### On Linux & Windows
 Navigate to repository  
-`cmake --preset debug` or `cmake --preset release`
-`cd build/debug` or `cd build/release`
-`ninja`
-`./sdl_app`
+`cmake --preset debug` or `cmake --preset release`  
+`cd build/debug` or `cd build/release`  
+`ninja`  
+`./sdl_app`  
 
 
