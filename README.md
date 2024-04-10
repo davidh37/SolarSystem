@@ -27,9 +27,9 @@ Install SDL2, glm
 
 ### On Linux & Windows
 Navigate to repository  
-`mkdir build`  
-`cd build`  
-`cmake ..`  
-`ninja`  
+`cmake --preset debug` or `cmake --preset release`
+`cd build/debug` or `cd build/release`
+`ninja`
+`./sdl_app`
 
 

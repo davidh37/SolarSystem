@@ -38,10 +38,3 @@ target_include_directories(sdl_app PUBLIC ${OPENGL_INCLUDE_DIR})
 
 find_package(GLM REQUIRED)
 target_include_directories(sdl_app PUBLIC ${GLM_INCLUDE_DIRS})
-
-#target_compile_options(sdl_app PUBLIC -Wall -Wextra -O3 -g -g3 -gdwarf-2 -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero)
-#target_link_options(sdl_app PUBLIC -fsanitize=address)
-#target_compile_options (sdl_app PUBLIC -O3)
-#target_compile_definitions(sdl_app PUBLIC -DNDEBUG)
-target_compile_options(sdl_app PUBLIC -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -O3 -g -g3 -gdwarf-2)
-target_link_options(sdl_app PUBLIC)

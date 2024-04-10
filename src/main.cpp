@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
     t.upload(false);
     t.load();
     s.setUniformInteger(1, 0);
-    
+
 
     Mesh m;
     Mesh::VertexBuffer vb;
