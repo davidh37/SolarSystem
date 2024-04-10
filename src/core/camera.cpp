@@ -57,9 +57,6 @@ namespace camera {
         float fov_y = 2.0f * atan(aspectXtoY * (tan(fov * M_PI / 180.0f * 0.5f)));
         projection_matrix = glm::perspective(fov_y, aspectXtoY, near, far);
 
-        //revert handedness swap so we look down positive z axis
-        projection_matrix[2][2] = -projection_matrix[2][2];
-        projection_matrix[2][3] = -projection_matrix[2][3];
         updateView();
 
         initialized = true;

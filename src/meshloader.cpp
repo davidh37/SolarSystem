@@ -1,5 +1,6 @@
 #include "core/common.hpp"
 #include "meshloader.hpp"
+#include "core/engine.hpp"
 #include <fstream>
 #include <cstdlib>
 
@@ -30,11 +31,11 @@ namespace meshloader {
         return true;
     }
 
-    bool addObj(meshing::VertexBuffer &vb, string path, vec3 pos, vec3 fallback_color){
+    void addObj(meshing::VertexBuffer &vb, string path, vec3 pos, vec3 fallback_color){
         std::ifstream myfile(path);
         if(!myfile.is_open()) {
             cout << "addObj PARSE ERROR: couldn't open .obj file " << path << endl;
-            return false;
+            engine::quit(1);
         }
 
         std::string line = "";
@@ -60,15 +61,15 @@ namespace meshloader {
 
                 float x, y, z;
                 if(!tryReadFloat(line, i, x)){
-                    cout << "invalid x" << endl;
+                    cout << "[meshloader] invalid x" << endl;
                     goto parse_error;
                 }
                 if(!tryReadFloat(line, i, y)){
-                    cout << "invalid y" << endl;
+                    cout << "[meshloader] invalid y" << endl;
                     goto parse_error;
                 }
                 if(!tryReadFloat(line, i, z)){
-                    cout << "invalid z" << endl;
+                    cout << "[meshloader] invalid z" << endl;
                     goto parse_error;
                 }
                 position_list.push_back(x);
@@ -82,17 +83,17 @@ namespace meshloader {
 
                 float tx, ty, tz;
                 if(!tryReadFloat(line, i, tx)){
-                    cout << "invalid uv 2" << endl;
+                    cout << "[meshloader] invalid uv 2" << endl;
                     goto parse_error;
                 }
                 if(!tryReadFloat(line, i, ty)){
-                    cout << "invalid uv 1" << endl;
+                    cout << "[meshloader] invalid uv 1" << endl;
                     goto parse_error;
                 }
                 if(tryReadFloat(line, i, tz)){
                     // we can't read 3D tex coords
                     if(tz != 0.0f){
-                        cout << "too many tex coords" << endl;
+                        cout << "[meshloader] too many tex coords" << endl;
                         goto parse_error;
                     }
                 }
@@ -104,15 +105,15 @@ namespace meshloader {
 
                 float nx, ny, nz;
                 if(!tryReadFloat(line, i, nx)){
-                    cout << "invalid normal 0" << endl;
+                    cout << "[meshloader] invalid normal 0" << endl;
                     goto parse_error;
                 }
                 if(!tryReadFloat(line, i, ny)){
-                    cout << "invalid normal 1" << endl;
+                    cout << "[meshloader] invalid normal 1" << endl;
                     goto parse_error;
                 }
                 if(!tryReadFloat(line, i, nz)){
-                    cout << "invalid normal 2" << endl;
+                    cout << "[meshloader] invalid normal 2" << endl;
                     goto parse_error;
                 }
                 normal_list.push_back(nx);
@@ -121,8 +122,8 @@ namespace meshloader {
             }else if(line.size() >= 2 && line[i] == 'f' && line[i+1] == ' '){
                 continue;
             }else{
-                // parse error
-                goto parse_error;
+                // parse warning
+                cout << "[meshloader] unknown line " << line;
             }
         }
 
@@ -150,7 +151,7 @@ namespace meshloader {
                 // fill indices
                 for(int k = 0; k < 3; k++){
                     if(!tryReadInt(line, i, position_index[k])){
-                        cout << "invalid position at " << k << endl;
+                        cout << "[meshloader] invalid position at " << k << endl;
                         goto parse_error;
                     }
                     if((i < line.size() && line[i] == ' ') || (i == line.size() && k == 2)){
@@ -160,19 +161,20 @@ namespace meshloader {
                         // position and normal
                         i += 2;
                         if(!tryReadInt(line, i, normal_index[k])){
-                            cout << "invalid normal at " << k << endl;
+                            cout << "[meshloader] (1) invalid normal at " << k << endl;
                             goto parse_error;
                         }
                     }else if(i < line.size() && line[i] == '/'){
                         // position and uv...
                         i += 1;
                         if(!tryReadInt(line, i, uv_index[k])){
-                            cout << "invalid uv at " << k << endl;
+                            cout << "[meshloader] invalid uv at " << k << endl;
                             goto parse_error;
                         }
                         if(i < line.size() && line[i] == '/'){
+                            i += 1;
                             if(!tryReadInt(line, i, normal_index[k])){
-                                cout << "invalid normal at " << k << endl;
+                                cout << "[meshloader] (2) invalid normal at " << k << endl;
                                 goto parse_error;
                             }
                         }
@@ -241,12 +243,12 @@ namespace meshloader {
 
         cout << "[meshloader] " << total_count / 3 << " triangles loaded" << endl;
         myfile.close();
-        return true;
+        return;
 
         parse_error:
             myfile.close();
-            cout << "addObj() PARSE ERROR: couldn't parse .obj file " << path << " at line " << "\"" << line << "\"" << endl;
-            return false;
+            cout << "[meshloader] PARSE ERROR: couldn't parse .obj file " << path << " at line " << "\"" << line << "\"" << endl;
+            engine::quit(1);
     }
 
     void addCircle(meshing::VertexBuffer &vb, int segments, vec3 pos, vec2 scale, vec3 color, vec2 uv_pos, vec2 uv_scale){

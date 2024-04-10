@@ -17,17 +17,17 @@ void initialize(){
     input::lockMouse();
 
     s.createAndUpdate("resources/texture.vert", "resources/texture.frag");
-    t.create(false, 2);
-    t.update("resources/test.png", false, 0);
-    t.update("resources/test2.png", false, 1);
+    t.create(false, 1);
+    t.update("resources/textures/2k_sun.jpg", true, 0);
+    //t.update("resources/test2.png", false, 1);
 
     s.use();
     s.setUniformInteger(1, 0);
 
     m.create(meshing::STATIC, meshing::TRIANGLE);
     meshing::VertexBuffer vb;
-    meshloader::addRect(vb, {-1.0f, 0.0f, 0.0f}, {0.5f, 0.5f}, COLOR_BLACK, {0.0f, 0.0f}, {1.0f, 1.0f});
-    //meshloader::addObj(vb, "resources/bunny.obj");
+    //meshloader::addRect(vb, {-1.0f, 0.0f, 0.0f}, {0.5f, 0.5f}, COLOR_BLACK, {0.0f, 0.0f}, {1.0f, 1.0f});
+    meshloader::addObj(vb, "resources/globe.obj");
     m.update(vb);
 
     ui_layer::initialize();
@@ -46,18 +46,16 @@ bool update(float delta){
 
     int mouse_delta_x, mouse_delta_y;
     input::getMouseDelta(mouse_delta_x, mouse_delta_y);
-    //cout << delta << endl;
-    //cout << mouse_delta_x << " | " << mouse_delta_y << endl;
-    //cout << "fps: " << 1.0f / delta << endl;
-    float mouseDeltaX = delta * 0.5f * mouse_delta_x;
-    float mouseDeltaY = -delta * 0.5f * mouse_delta_y;
+
+    float mouseDeltaX = -delta * 0.5f * mouse_delta_x;
+    float mouseDeltaY = delta * 0.5f * mouse_delta_y;
 
     input::queryInputs();
     if(input::getKeyState(input::KEY_W)){
-        camera::addPosition({0.00f, 0.0f, move_power});
+        camera::addPosition({0.00f, 0.0f, -move_power});
     }
     if(input::getKeyState(input::KEY_S)){
-        camera::addPosition({0.00f, 0.0f, -move_power});
+        camera::addPosition({0.00f, 0.0f, move_power});
     }
     if(input::getKeyState(input::KEY_A)){
         camera::addPosition({-move_power, 0.0f, 0.0f});
@@ -79,7 +77,7 @@ bool update(float delta){
     return false;
 }
 
-void render(){
+void render(int fps, int frame_time, int bodies){
 
     engine::clearScreen(0.05f, 0.05, 0.07f);
     mat4 vp = camera::getProjectionMatrix() * camera::getViewMatrix();
@@ -89,7 +87,12 @@ void render(){
     s.setUniformMat4(0, vp);
     m.draw();
 
-    ui_layer::drawStringUnscaled("hello world", 0.1f, 0.1f, 0.2f, COLOR_RED);
+    ui_layer::drawStringUnscaled("fps ", 0.83f, 0.92f, 0.03f, COLOR_WHITE);
+    ui_layer::drawStringUnscaled(to_string(fps), 0.87f, 0.92f, 0.03f, COLOR_WHITE);
+    ui_layer::drawStringUnscaled("frame time ", 0.83f, 0.88f, 0.03f, COLOR_WHITE);
+    ui_layer::drawStringUnscaled(to_string(frame_time), 0.94f, 0.88f, 0.03f, COLOR_WHITE);
+    ui_layer::drawStringUnscaled("objects ", 0.83f, 0.84f, 0.03f, COLOR_WHITE);
+    ui_layer::drawStringUnscaled(to_string(bodies), 0.91f, 0.84f, 0.03f, COLOR_WHITE);
     ui_layer::render();
     engine::swapBuffer();
 }
@@ -99,10 +102,10 @@ int main(int argc, char *argv[]){
     initialize();
 
     camera::setProjection(90.0f, 0.01f, 100.0f);
-    camera::setPosition({0.0f, 0.0f, -2.0f});
+    camera::setPosition({0.0f, 0.0f, 2.0f});
 
     uint32_t timestamp = engine::getMs();
-
+    engine::sleep(1);
     while(true){
         uint32_t new_stamp = engine::getMs();
         uint32_t diff = new_stamp - timestamp;
@@ -116,7 +119,7 @@ int main(int argc, char *argv[]){
             cleanup(1);
         }
         
-        render();
+        render(1.0f / delta, (int) diff, 0);
         engine::sleep(1);
     }
 
