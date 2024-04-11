@@ -11,9 +11,10 @@ layout(location = 1) uniform mat4 view;
 layout(location = 2) uniform mat4 projection;
 layout(location = 3) uniform sampler2DArray tex;
 layout(location = 4) uniform vec4 material;
+layout(location = 5) uniform int texture_id;
 
-const vec3 light_color = vec3(1.0f, 0.7f, 0.7f);
-const vec3 light_origin = vec3(3.0f, 3.0f, 0.0f);
+const vec3 light_color = vec3(1.0f, 1.0f, 1.0f);
+const vec3 light_origin = vec3(0.0f, 0.0f, 0.0f);
 
 void main(){
     float specularScalar = material[0];
@@ -32,7 +33,7 @@ void main(){
     vec3 reflect_direction = reflect(-to_light, norm);
     float specular = specularScalar * pow(max(dot(to_camera, reflect_direction), 0.0), shininessScalar);
 
-    vec4 tex_color = texture(tex, vec3(UV, 0));
+    vec4 tex_color = texture(tex, vec3(UV, texture_id));
     vec3 object_color = (ambient + diffuse + specular) * light_color * tex_color.xyz;
     out_Color = vec4(object_color.xyz, tex_color.a);
 }

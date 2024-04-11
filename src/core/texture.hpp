@@ -19,6 +19,8 @@ class Texture {
         void use(int texture_unit = 0);
         void destroy();
 
+        int getLayerCount();
+
     private:
         GLuint id = 0;
         int w = 0;

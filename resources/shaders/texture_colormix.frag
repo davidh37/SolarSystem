@@ -5,10 +5,8 @@ in vec2 Texcoord;
 in vec3 color;
 out vec4 out_Color;
 
-layout(location = 0) uniform mat4 model;
-layout(location = 1) uniform mat4 view;
-layout(location = 2) uniform mat4 projection;
-layout(location = 3) uniform sampler2DArray tex;
+layout(location = 0) uniform mat4 mvp;
+layout(location = 1) uniform sampler2DArray tex;
 
 void main(){
     //out_Color = vec4(vec3(gl_FragCoord.z), 1.0);

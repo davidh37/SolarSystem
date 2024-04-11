@@ -63,7 +63,7 @@ namespace ui_layer{
     static Texture fontTexture;
     static meshing::Mesh mesh;
     static meshing::VertexBuffer vertices;
-    int textureUnit = 15;
+    int textureUnit = 0;
 
     void initialize(){
         mesh.create(meshing::STREAM, meshing::TRIANGLE);
@@ -145,10 +145,8 @@ namespace ui_layer{
 
         fontTexture.use(textureUnit);
         shader.use();
-        shader.setUniformMat4(0, mat4(1.0f));
-        shader.setUniformMat4(1, mat4(1.0f));
-        shader.setUniformMat4(2, to_ndc);
-        shader.setUniformInteger(3, textureUnit);
+        shader.setUniformMat4(0, to_ndc);
+        shader.setUniformInteger(1, textureUnit);
 
         mesh.update(vertices);
         mesh.draw();

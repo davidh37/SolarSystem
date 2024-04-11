@@ -111,3 +111,7 @@ void Texture::destroy(){
     h = 0;
 }
 
+int Texture::getLayerCount(){
+    return layers;
+}
+
