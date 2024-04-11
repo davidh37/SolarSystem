@@ -123,7 +123,7 @@ namespace meshloader {
                 continue;
             }else{
                 // parse warning
-                cout << "[meshloader] unknown line " << line;
+                cout << "[meshloader] unknown line " << line << endl;
             }
         }
 
@@ -131,7 +131,7 @@ namespace meshloader {
         myfile.clear();
         myfile.seekg(0);
 
-        cout << "[meshloader] " << " loading \'" << path << "\'" << endl;
+        cout << "[meshloader] loading \'" << path << "\'" << endl;
         cout << "[meshloader] " << position_list.size() / 3 << " positions loaded" << endl;
         cout << "[meshloader] " << normal_list.size() / 3 << " normals loaded" << endl;
         cout << "[meshloader] " << uv_list.size() / 2 << " uvs loaded" << endl;

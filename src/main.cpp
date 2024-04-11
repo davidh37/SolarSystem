@@ -7,37 +7,31 @@
 #include "core/input.hpp"
 #include "meshloader.hpp"
 #include "ui_layer.hpp"
+#include "renderer.hpp"
 
-static Shader s;
-static Texture t;
-static meshing::Mesh m;
+
+meshing::Mesh m;
 
 void initialize(){
     engine::initialize("Solar System Demo", 1024, 768, false, false, 3, 3);
+    ui_layer::initialize();
+    renderer::initialize();
+
     input::lockMouse();
-
-    s.createAndUpdate("resources/texture.vert", "resources/texture.frag");
-    t.create(false, 1);
-    t.update("resources/textures/2k_sun.jpg", true, 0);
-    //t.update("resources/test2.png", false, 1);
-
-    s.use();
-    s.setUniformInteger(1, 0);
 
     m.create(meshing::STATIC, meshing::TRIANGLE);
     meshing::VertexBuffer vb;
     //meshloader::addRect(vb, {-1.0f, 0.0f, 0.0f}, {0.5f, 0.5f}, COLOR_BLACK, {0.0f, 0.0f}, {1.0f, 1.0f});
-    meshloader::addObj(vb, "resources/globe.obj");
+    meshloader::addObj(vb, "resources/sphere2.obj");
     m.update(vb);
-
-    ui_layer::initialize();
 }
 
 void cleanup(int code){
-    s.destroy();
-    t.destroy();
-
+    renderer::cleanup();
     ui_layer::cleanup();
+
+    m.destroy();
+
     engine::quit(code);
 }
 
@@ -79,13 +73,10 @@ bool update(float delta){
 
 void render(int fps, int frame_time, int bodies){
 
-    engine::clearScreen(0.05f, 0.05, 0.07f);
-    mat4 vp = camera::getProjectionMatrix() * camera::getViewMatrix();
+    engine::clearScreen(0.2f, 0.2f, 0.2f);
 
-    s.use();
-    t.use();
-    s.setUniformMat4(0, vp);
-    m.draw();
+    mat4 modelMatrix = glm::scale(vec3(1.0f));
+    renderer::render(m, modelMatrix, camera::getViewMatrix(), camera::getProjectionMatrix(), 0, 1.5f, 2.3f, 0.15f, 16.0f);
 
     ui_layer::drawStringUnscaled("fps ", 0.83f, 0.92f, 0.03f, COLOR_WHITE);
     ui_layer::drawStringUnscaled(to_string(fps), 0.87f, 0.92f, 0.03f, COLOR_WHITE);
@@ -94,6 +85,7 @@ void render(int fps, int frame_time, int bodies){
     ui_layer::drawStringUnscaled("objects ", 0.83f, 0.84f, 0.03f, COLOR_WHITE);
     ui_layer::drawStringUnscaled(to_string(bodies), 0.91f, 0.84f, 0.03f, COLOR_WHITE);
     ui_layer::render();
+
     engine::swapBuffer();
 }
 
@@ -102,7 +94,7 @@ int main(int argc, char *argv[]){
     initialize();
 
     camera::setProjection(90.0f, 0.01f, 100.0f);
-    camera::setPosition({0.0f, 0.0f, 2.0f});
+    camera::setPosition({0.0f, 0.0f, 3.0f});
 
     uint32_t timestamp = engine::getMs();
     engine::sleep(1);

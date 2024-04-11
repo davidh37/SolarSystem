@@ -68,7 +68,7 @@ namespace ui_layer{
     void initialize(){
         mesh.create(meshing::STREAM, meshing::TRIANGLE);
 
-        shader.createAndUpdate("resources/texture.vert", "resources/texture_color_mix.frag");
+        shader.createAndUpdate("resources/shaders/texture.vert", "resources/shaders/texture_colormix.frag");
 
         fontTexture.create(false, 1);
         SDL_Surface *surf = Texture::loadPixels("resources/calibri32clean.bmp", false);
@@ -145,8 +145,10 @@ namespace ui_layer{
 
         fontTexture.use(textureUnit);
         shader.use();
-        shader.setUniformMat4(0, to_ndc);
-        shader.setUniformInteger(1, textureUnit);
+        shader.setUniformMat4(0, mat4(1.0f));
+        shader.setUniformMat4(1, mat4(1.0f));
+        shader.setUniformMat4(2, to_ndc);
+        shader.setUniformInteger(3, textureUnit);
 
         mesh.update(vertices);
         mesh.draw();

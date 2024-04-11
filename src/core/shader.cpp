@@ -91,6 +91,10 @@ void Shader::setUniformMat4(int location, mat4 val){
     glUniformMatrix4fv(location, 1, GL_FALSE, &val[0][0]);
 }
 
+void Shader::setUniformVec4(int location, vec4 val){
+    glUniform4fv(location, 1, &val[0]);
+}
+
 void Shader::destroy(){
     glUseProgram(0);
     glDetachShader(id, vert_id);

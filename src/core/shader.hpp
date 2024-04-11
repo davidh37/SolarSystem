@@ -9,6 +9,7 @@ class Shader {
         void use();
         void setUniformInteger(int location, int val);
         void setUniformMat4(int location, mat4 val);
+        void setUniformVec4(int location, vec4 val);
         void destroy();
 
     private:
