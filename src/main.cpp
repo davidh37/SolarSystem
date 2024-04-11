@@ -83,27 +83,46 @@ int main(int argc, char *argv[]){
     
     initialize();
 
-
+    float fixed_step = 1.0f / 120.0f;
+    float acc = 0.0f;
+    int frame = 0;
+    uint32_t frame_time = 0;
 
     uint32_t timestamp = engine::getMs();
     engine::sleep(1);
 
+    // simulate solar system init
+    for(int i = 0; i < 100000; i++){
+        simulation::update(fixed_step);
+    }
+
     while(true){
         uint32_t new_stamp = engine::getMs();
-        uint32_t diff = new_stamp - timestamp;
+        float diff = 0.001f * (new_stamp - timestamp);
         timestamp = new_stamp;
-        float delta = 0.001f * diff;
 
-        if(updateInput(delta)){
-            cleanup(0);
+        acc += diff;
+        if(acc < fixed_step){
+            continue;
         }
-        int objects = simulation::update(delta);
-        if(engine::queryErrors()){
-            cleanup(1);
-        }
+
+
         
-        render(1.0f / delta, (int) diff, objects);
-        engine::sleep(1);
+        while(acc >= fixed_step){
+            acc -= fixed_step;
+            if(updateInput(fixed_step)){
+                cleanup(0);
+            }
+
+            uint32_t temp_stamp1 = engine::getMs();
+            int objects = simulation::update(fixed_step);
+            render(1.0f / fixed_step, (int)frame_time, objects);
+            frame_time = engine::getMs() - temp_stamp1;
+
+            if(engine::queryErrors()){
+                cleanup(1);
+            }
+        }
     }
 
     return 0;

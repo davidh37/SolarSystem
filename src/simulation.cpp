@@ -9,6 +9,8 @@ namespace simulation {
 
     void initialize(){
         const float AU = 400.0f;
+        const float EARTH_SPEED = 40.0f;
+
         vec4 mat_sun = vec4(0.0f, 0.0f, 2.5f, 16.0f);
         vec4 mat_earth = vec4(1.5f, 2.3f, 0.15f, 16.0f);
         vec4 mat_rocky = vec4(1.5f, 2.3f, 0.15f, 16.0f);
@@ -30,7 +32,7 @@ namespace simulation {
         // mercury
         objects.resize(index+1);
         objects[index].position = {0.5f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {0.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 0.055f;
         objects[index].radius = 0.38f;
 
@@ -42,7 +44,7 @@ namespace simulation {
         // venus
         objects.resize(index+1);
         objects[index].position = {0.75f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 0.815f;
         objects[index].radius = 0.9499f;
 
@@ -54,7 +56,7 @@ namespace simulation {
         // earth
         objects.resize(index+1);
         objects[index].position = {1.0f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 1.0f;
         objects[index].radius = 1.0f;
 
@@ -66,7 +68,7 @@ namespace simulation {
         // mars
         objects.resize(index+1);
         objects[index].position = {1.25f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 0.107f;
         objects[index].radius = 0.53f;
 
@@ -78,7 +80,7 @@ namespace simulation {
         // jupiter
         objects.resize(index+1);
         objects[index].position = {1.5f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 317.8f;
         objects[index].radius = 11.2f;
 
@@ -90,7 +92,7 @@ namespace simulation {
         // saturn
         objects.resize(index+1);
         objects[index].position = {1.75f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 95.159f;
         objects[index].radius = 9.14f;
 
@@ -102,7 +104,7 @@ namespace simulation {
         // uranus
         objects.resize(index+1);
         objects[index].position = {2.0f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 14.536f;
         objects[index].radius = 4.0f;
 
@@ -114,7 +116,7 @@ namespace simulation {
         // neptune
         objects.resize(index+1);
         objects[index].position = {2.25f * AU, 0.0f, 0.0f};
-        objects[index].velocity = {1.0f, 0.0f, 0.0f};
+        objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 17.146f;
         objects[index].radius = 3.85f;
 
@@ -132,13 +134,33 @@ namespace simulation {
         renderer::cleanup();   
     }
 
-    int update(float timestep){
-        // do fancy physics
-        for(int i = 0; i < objects.size(); i++){
-            for(int j = i + 1; j < objects.size(); j++){
-                // interaction
+    int update(float dt){
+        
+
+        // gravity interaction
+        const float GRAVITY = 0.005f;
+
+        for(auto i = 0; i < objects.size(); i++){
+            objects[i].acceleration = vec3(0.0f);
+        }
+        for(auto i = 0; i < objects.size(); i++){
+            for(auto j = i + 1; j < objects.size(); j++){
+                vec3 i_to_j = objects[j].position - objects[i].position;
+                float i_to_j_len2 = glm::length2(i_to_j);
+                assert(i_to_j_len2 != 0.0f);
+                float force_modifier = GRAVITY / i_to_j_len2;
+                objects[i].acceleration += i_to_j * objects[j].mass * force_modifier;
+                objects[j].acceleration += -1 * i_to_j * objects[i].mass * force_modifier;
             }
         }
+
+        // euler integration
+        for(auto i = 0; i < objects.size(); i++){
+            vec3 newVel = objects[i].velocity + objects[i].acceleration * dt;
+            objects[i].position += 0.5f * (objects[i].velocity + newVel) * dt;
+            objects[i].velocity = newVel;
+        }
+
         return objects.size();
     }
 
