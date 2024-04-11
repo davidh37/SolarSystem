@@ -45,10 +45,13 @@ namespace engine {
             quit(1);
         }
 
-        glEnable(GL_CULL_FACE); 
+        glEnable(GL_CULL_FACE);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glEnable(GL_DEPTH); // required for Z
+
+        glEnable(GL_DEPTH_TEST); // required for Z
+        glDepthFunc(GL_LESS);  
     }
 
     
@@ -93,7 +96,7 @@ namespace engine {
         assert(g < 1.0f);
         assert(b < 1.0f);
         glClearColor(r, g, b, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void showErrorMessage(string message){

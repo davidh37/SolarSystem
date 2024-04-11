@@ -23,6 +23,7 @@ void initialize(){
     meshing::VertexBuffer vb;
     //meshloader::addRect(vb, {-1.0f, 0.0f, 0.0f}, {0.5f, 0.5f}, COLOR_BLACK, {0.0f, 0.0f}, {1.0f, 1.0f});
     meshloader::addObj(vb, "resources/sphere2.obj");
+    meshloader::addObj(vb, "resources/sphere2.obj", vec3(3.0f, 0.0f, 0.0f));
     m.update(vb);
 }
 
