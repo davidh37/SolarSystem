@@ -15,10 +15,14 @@ namespace renderer {
     static Shader s_points;
     static meshing::Mesh m_points;
 
+    static Shader s_skybox;
+    static Texture t_skybox;
+    static meshing::Mesh m_skybox;
+
     void initialize(){
         s.createAndUpdate("resources/shaders/phong.vert", "resources/shaders/phong.frag");
 
-        t.create(true, 10);
+        t.create(true, 11);
         string path = "resources/2Ktextures/";
         t.update(path + "sun.jpg", true, 0);
         t.update(path + "mercury.jpg", true, 1);
@@ -30,6 +34,7 @@ namespace renderer {
         t.update(path + "uranus.jpg", true, 7);
         t.update(path + "neptune.jpg", true, 8);
         t.update(path + "moon.jpg", true, 9);
+        t.update(path + "earth_night.jpg", true, 10);
         t.mipmap();
         
         m.resize(3);
@@ -85,10 +90,11 @@ namespace renderer {
             assert(obj.mesh_id < m.size());
             
 
-            mat4 model = mat4(1.0f);
-            model = glm::translate(model, obj.position);
-            model = glm::scale(model, vec3(obj.radius));
-            model = glm::mat4_cast(obj.rotation) * model;
+            
+            mat4 trans = glm::translate(mat4(1.0f), obj.position);
+            mat4 rot = glm::mat4_cast(obj.rotation);
+            mat4 scale = glm::scale(mat4(1.0f), vec3(obj.radius));
+            mat4 model = trans * rot * scale;
 
             s.setUniformMat4(0, model);
             s.setUniformMat4(1, camera::getViewMatrix());

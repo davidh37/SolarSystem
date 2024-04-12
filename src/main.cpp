@@ -26,8 +26,8 @@ void cleanup(int code){
     engine::quit(code);
 }
 
-bool updateInput(float delta){
-    float move_power = 150.0f * delta;
+bool updateInput(float delta, int &follow_object){
+    float move_power = 80.0f * delta;
 
     int mouse_delta_x, mouse_delta_y;
     input::getMouseDelta(mouse_delta_x, mouse_delta_y);
@@ -57,8 +57,38 @@ bool updateInput(float delta){
     if(input::getKeyState(input::KEY_L)){
         input::unlockMouse();
     }
-    
+    if(input::getKeyState(input::KEY_0)){
+        follow_object = 0;
+    }
+    if(input::getKeyState(input::KEY_1)){
+        follow_object = 1;
+    }
+    if(input::getKeyState(input::KEY_2)){
+        follow_object = 2;
+    }
+    if(input::getKeyState(input::KEY_3)){
+        follow_object = 3;
+    }
+    if(input::getKeyState(input::KEY_4)){
+        follow_object = 4;
+    }
+    if(input::getKeyState(input::KEY_5)){
+        follow_object = 5;
+    }
+    if(input::getKeyState(input::KEY_6)){
+        follow_object = 6;
+    }
+    if(input::getKeyState(input::KEY_7)){
+        follow_object = 7;
+    }
+    if(input::getKeyState(input::KEY_8)){
+        follow_object = 8;
+    }
+    if(input::getKeyState(input::KEY_9)){
+        follow_object = 9;
+    }
 
+    
     if(input::hasQuit() || input::getKeyState(input::KEY_ESC)){
         return true;
     }
@@ -71,7 +101,7 @@ void render(int fps, int frame_time, int bodies){
 
     simulation::render();
 
-    ui_layer::drawStringUnscaled("fps ", 0.83f, 0.92f, 0.03f, COLOR_RED);
+    ui_layer::drawStringUnscaled("fps ", 0.83f, 0.92f, 0.03f, COLOR_WHITE);
     ui_layer::drawStringUnscaled(to_string(fps), 0.87f, 0.92f, 0.03f, COLOR_WHITE);
     ui_layer::drawStringUnscaled("frame time ", 0.83f, 0.88f, 0.03f, COLOR_WHITE);
     ui_layer::drawStringUnscaled(to_string(frame_time), 0.94f, 0.88f, 0.03f, COLOR_WHITE);
@@ -96,9 +126,10 @@ int main(int argc, char *argv[]){
 
     // simulate solar system init
     for(int i = 0; i < 100000; i++){
-        simulation::update(fixed_step);
+        simulation::update(fixed_step, 0);
     }
 
+    int follow = 0;
     while(true){
         uint32_t new_stamp = engine::getMs();
         float diff = 0.001f * (new_stamp - timestamp);
@@ -113,12 +144,14 @@ int main(int argc, char *argv[]){
         
         while(acc >= fixed_step){
             acc -= fixed_step;
-            if(updateInput(fixed_step)){
+
+            
+            if(updateInput(fixed_step, follow)){
                 cleanup(0);
             }
 
             uint32_t temp_stamp1 = engine::getMs();
-            int objects = simulation::update(fixed_step);
+            int objects = simulation::update(fixed_step, follow);
             render(1.0f / fixed_step, (int)frame_time, objects);
             frame_time = engine::getMs() - temp_stamp1;
 

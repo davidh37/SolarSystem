@@ -10,6 +10,7 @@ namespace input {
 
     static uint32_t keycode_to_SDL[KEY_BOARD_TOTAL] = {
         0,
+        SDLK_0, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, SDLK_6, SDLK_7, SDLK_8, SDLK_9,
         SDLK_a, SDLK_b, SDLK_c, SDLK_d, SDLK_e, SDLK_f, SDLK_g, SDLK_h, SDLK_i, SDLK_j, SDLK_k, SDLK_l, SDLK_m,
         SDLK_n, SDLK_o, SDLK_p, SDLK_q, SDLK_r, SDLK_s, SDLK_t, SDLK_u, SDLK_v, SDLK_w, SDLK_x, SDLK_y, SDLK_z,
         SDLK_UP, SDLK_LEFT, SDLK_DOWN, SDLK_RIGHT,

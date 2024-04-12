@@ -33,10 +33,18 @@ void main(){
     vec3 reflect_direction = reflect(-to_light, norm);
     float specular = specularScalar * pow(max(dot(to_camera, reflect_direction), 0.0), shininessScalar);
 
+    float light_level = (ambient + diffuse + specular);
     vec4 tex_color = texture(tex, vec3(UV, texture_id));
-    vec3 object_color = (ambient + diffuse + specular) * light_color * tex_color.xyz;
+    vec3 object_color = light_color * light_level * tex_color.xyz;
 
-    // final calculation to avoid flickering for small rocky planets
+    if(texture_id == 3 && light_level < 0.5f){
+        /* earth night blend */
+        vec3 night_object_color = 2.0f * texture(tex, vec3(UV, 10)).xyz;
+        float f = light_level / 0.5f;
+        object_color = f * object_color + (1 - f) * night_object_color;
+    }
+
+    // final calculation to avoid flickering rocky planets
     float dist = dot(position, position);
     if(texture_id >= 1 && texture_id <= 4 && dist > 25000){
         out_Color = tex_color;

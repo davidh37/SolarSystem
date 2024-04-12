@@ -11,6 +11,7 @@ namespace simulation {
         vec3 acceleration = vec3(0.0f);
         float mass; // earth = 1.0
         float radius; // earth = 1.0
+        float angular_velocity = 0.2f;
         
         // render data
         vec3 color = COLOR_WHITE;
@@ -23,7 +24,7 @@ namespace simulation {
 
     void cleanup();
 
-    int update(float timestep);
+    int update(float timestep, int follow_object);
 
     void render();
 }
