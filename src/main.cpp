@@ -54,6 +54,9 @@ bool updateInput(float delta){
     if(input::getKeyState(input::KEY_SPACE)){
         camera::addPosition({0.0f, move_power, 0.0f});
     }
+    if(input::getKeyState(input::KEY_L)){
+        input::unlockMouse();
+    }
     
 
     if(input::hasQuit() || input::getKeyState(input::KEY_ESC)){

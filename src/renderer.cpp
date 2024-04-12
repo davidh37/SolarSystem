@@ -12,6 +12,9 @@ namespace renderer {
     static Texture t;
     static std::vector<meshing::Mesh> m;
 
+    static Shader s_points;
+    static meshing::Mesh m_points;
+
     void initialize(){
         s.createAndUpdate("resources/shaders/phong.vert", "resources/shaders/phong.frag");
 
@@ -27,7 +30,7 @@ namespace renderer {
         t.update(path + "uranus.jpg", true, 7);
         t.update(path + "neptune.jpg", true, 8);
         t.update(path + "moon.jpg", true, 9);
-
+        t.mipmap();
         
         m.resize(3);
         meshing::VertexBuffer vb;
@@ -46,9 +49,32 @@ namespace renderer {
         meshloader::addObj(vb, "resources/bunny.obj");
         m[2].create(meshing::STATIC, meshing::TRIANGLE);
         m[2].update(vb);
+
+        s_points.createAndUpdate("resources/shaders/color.vert", "resources/shaders/color.frag");
+        m_points.create(meshing::STREAM, meshing::POINT);
+    }
+
+    void cleanup(){
+        s.destroy();
+        t.destroy();
+        for(auto mesh : m){
+            mesh.destroy();
+        }
+
+        s_points.destroy();
+        m_points.destroy();
     }
 
     void render(std::vector<simulation::Object> const&objects){
+        s_points.use();
+        s_points.setUniformMat4(0, camera::getProjectionMatrix() * camera::getViewMatrix());
+        meshing::VertexBuffer vb = {};
+        for(auto obj : objects){
+            vb.push_back({obj.position, obj.color, vec2()});
+        }
+        m_points.update(vb);
+        m_points.draw();
+
         s.use();
         t.use(0);
 
@@ -75,11 +101,5 @@ namespace renderer {
         }
     }
 
-    void cleanup(){
-        s.destroy();
-        t.destroy();
-        for(auto mesh : m){
-            mesh.destroy();
-        }
-    }
+    
 }

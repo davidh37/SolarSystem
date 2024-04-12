@@ -15,6 +15,7 @@ class Texture {
         void create(bool interpolate, int layers);
         void update(string const &path, bool flip, int layer = 0);
         void update(SDL_Surface &surf, int layer = 0);
+        void mipmap();
 
         void use(int texture_unit = 0);
         void destroy();
@@ -26,4 +27,5 @@ class Texture {
         int w = 0;
         int h = 0;
         int layers = 0;
+        bool interpolate = false;
 };

@@ -112,7 +112,10 @@ namespace meshing {
                 prim = GL_TRIANGLES;
                 break;
             case LINE:
-                prim = GL_LINE;
+                prim = GL_LINES;
+                break;
+            case POINT:
+                prim = GL_POINTS;
                 break;
             default:
                 assert(false);

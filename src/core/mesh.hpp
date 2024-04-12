@@ -31,6 +31,7 @@ namespace meshing {
 
 
     enum Primitive {
+        POINT,
         LINE,
         TRIANGLE
     };

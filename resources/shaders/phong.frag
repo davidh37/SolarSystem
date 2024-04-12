@@ -35,5 +35,12 @@ void main(){
 
     vec4 tex_color = texture(tex, vec3(UV, texture_id));
     vec3 object_color = (ambient + diffuse + specular) * light_color * tex_color.xyz;
-    out_Color = vec4(object_color.xyz, tex_color.a);
+
+    // final calculation to avoid flickering for small rocky planets
+    float dist = dot(position, position);
+    if(texture_id >= 1 && texture_id <= 4 && dist > 25000){
+        out_Color = tex_color;
+    }else{
+        out_Color = vec4(object_color.xyz, tex_color.a);
+    }
 }

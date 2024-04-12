@@ -13,6 +13,7 @@ namespace simulation {
         float radius; // earth = 1.0
         
         // render data
+        vec3 color = COLOR_WHITE;
         int texture_id;
         int mesh_id;
         vec4 material;

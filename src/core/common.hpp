@@ -15,6 +15,7 @@
 
 
 #define COLOR_RED vec3(1.0f, 0.0f, 0.0f)
+#define COLOR_ORANGE vec3(1.0f, 0.5f, 0.35f)
 #define COLOR_BLUE vec3(0.0f, 0.0f, 1.0f)
 #define COLOR_GREEN vec3(0.0f, 1.0f, 0.0f)
 #define COLOR_WHITE vec3(1.0f, 1.0f, 1.0f)

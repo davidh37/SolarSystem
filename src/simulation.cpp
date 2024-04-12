@@ -8,7 +8,7 @@ namespace simulation {
     static std::vector<Object> objects;
 
     void initialize(){
-        const float AU = 400.0f;
+        const float AU = 250.0f;
         const float EARTH_SPEED = 40.0f;
 
         vec4 mat_sun = vec4(0.0f, 0.0f, 2.5f, 16.0f);
@@ -31,7 +31,7 @@ namespace simulation {
 
         // mercury
         objects.resize(index+1);
-        objects[index].position = {0.5f * AU, 0.0f, 0.0f};
+        objects[index].position = {0.7f * AU, 0.0f, 0.0f};
         objects[index].velocity = {0.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 0.055f;
         objects[index].radius = 0.38f;
@@ -43,11 +43,12 @@ namespace simulation {
 
         // venus
         objects.resize(index+1);
-        objects[index].position = {0.75f * AU, 0.0f, 0.0f};
+        objects[index].position = {0.85f * AU, 0.0f, 0.0f};
         objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 0.815f;
         objects[index].radius = 0.9499f;
 
+        objects[index].color = COLOR_ORANGE;
         objects[index].mesh_id = 0;
         objects[index].texture_id = 2;
         objects[index].material = mat_rocky; // specular, diffuse, ambient, shininess
@@ -60,6 +61,7 @@ namespace simulation {
         objects[index].mass = 1.0f;
         objects[index].radius = 1.0f;
 
+        objects[index].color = COLOR_BLUE;
         objects[index].mesh_id = 0;
         objects[index].texture_id = 3;
         objects[index].material = mat_earth;  // specular, diffuse, ambient, shininess
@@ -67,11 +69,12 @@ namespace simulation {
 
         // mars
         objects.resize(index+1);
-        objects[index].position = {1.25f * AU, 0.0f, 0.0f};
+        objects[index].position = {1.15f * AU, 0.0f, 0.0f};
         objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 0.107f;
         objects[index].radius = 0.53f;
 
+        objects[index].color = COLOR_ORANGE;
         objects[index].mesh_id = 0;
         objects[index].texture_id = 4;
         objects[index].material = mat_rocky; // specular, diffuse, ambient, shininess
@@ -79,7 +82,7 @@ namespace simulation {
 
         // jupiter
         objects.resize(index+1);
-        objects[index].position = {1.5f * AU, 0.0f, 0.0f};
+        objects[index].position = {2.0f * AU, 0.0f, 0.0f};
         objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 317.8f;
         objects[index].radius = 11.2f;
@@ -91,7 +94,7 @@ namespace simulation {
 
         // saturn
         objects.resize(index+1);
-        objects[index].position = {1.75f * AU, 0.0f, 0.0f};
+        objects[index].position = {3.0f * AU, 0.0f, 0.0f};
         objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 95.159f;
         objects[index].radius = 9.14f;
@@ -103,7 +106,7 @@ namespace simulation {
         
         // uranus
         objects.resize(index+1);
-        objects[index].position = {2.0f * AU, 0.0f, 0.0f};
+        objects[index].position = {4.0f * AU, 0.0f, 0.0f};
         objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 14.536f;
         objects[index].radius = 4.0f;
@@ -115,7 +118,7 @@ namespace simulation {
 
         // neptune
         objects.resize(index+1);
-        objects[index].position = {2.25f * AU, 0.0f, 0.0f};
+        objects[index].position = {5.0f * AU, 0.0f, 0.0f};
         objects[index].velocity = {1.0f, 0.0f, EARTH_SPEED};
         objects[index].mass = 17.146f;
         objects[index].radius = 3.85f;
@@ -125,7 +128,7 @@ namespace simulation {
         objects[index].material = mat_gas; // specular, diffuse, ambient, shininess
         index++;
 
-        camera::setProjection(80.0f, 0.1f, 1000.0f);
+        camera::setProjection(80.0f, 0.15f, 2000.0f);
         camera::setPosition({1 * AU, 0.0f, 5.0f});
         renderer::initialize();
     }

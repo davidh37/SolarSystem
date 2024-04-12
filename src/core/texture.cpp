@@ -75,6 +75,7 @@ void Texture::create(bool interpolate, int layers){
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     this->layers = layers;
+    this->interpolate = interpolate;
 }
 
 void Texture::update(string const &path, bool flip, int layer){
@@ -96,6 +97,16 @@ void Texture::update(SDL_Surface &surf, int layer){
         engine::quit(1);
     }
     glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, surf.w, surf.h, 1, GL_RGBA, GL_UNSIGNED_BYTE, surf.pixels);
+}
+
+void Texture::mipmap(){
+    glBindTexture(GL_TEXTURE_2D_ARRAY, id);
+    if(interpolate){
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    }else{
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    }
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 }
 
 void Texture::use(int texture_unit){
