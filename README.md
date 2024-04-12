@@ -1,5 +1,5 @@
-# SolarSystem
-A 3D OpenGL demo  
+# OpenGL Solar System
+A 3D OpenGL demo with simple euler orbits.
 WASD space and shift to move + number keys for camera modes  
 
 https://github.com/davidh37/SolarSystem/assets/51903513/2aeb4ae7-1495-4274-a580-a053fef9e1a1
