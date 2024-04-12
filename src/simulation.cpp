@@ -135,7 +135,7 @@ namespace simulation {
         objects[index].velocity = {1.0f, 0.0f, 1.0f * EARTH_SPEED};
         objects[index].mass = 0.01f;
         objects[index].radius = 0.5f;
-         objects[index].angular_velocity = 0.0f;
+        objects[index].angular_velocity = 0.0f;
 
         objects[index].color = COLOR_ORANGE;
         objects[index].mesh_id = 1;

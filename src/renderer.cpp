@@ -15,9 +15,6 @@ namespace renderer {
     static Shader s_points;
     static meshing::Mesh m_points;
 
-    static Shader s_skybox;
-    static Texture t_skybox;
-    static meshing::Mesh m_skybox;
 
     void initialize(){
         s.createAndUpdate("resources/shaders/phong.vert", "resources/shaders/phong.frag");
@@ -50,13 +47,10 @@ namespace renderer {
         m[1].create(meshing::STATIC, meshing::TRIANGLE);
         m[1].update(vb);
 
-        vb.clear();
-        meshloader::addObj(vb, "resources/bunny.obj");
-        m[2].create(meshing::STATIC, meshing::TRIANGLE);
-        m[2].update(vb);
-
         s_points.createAndUpdate("resources/shaders/color.vert", "resources/shaders/color.frag");
         m_points.create(meshing::STREAM, meshing::POINT);
+
+        vb.clear();
     }
 
     void cleanup(){
@@ -71,6 +65,8 @@ namespace renderer {
     }
 
     void render(std::vector<simulation::Object> const&objects){
+
+        // draw some points at planet locations so at least 1 pixel is always present in the distance to prevent flickering
         s_points.use();
         s_points.setUniformMat4(0, camera::getProjectionMatrix() * camera::getViewMatrix());
         meshing::VertexBuffer vb = {};
